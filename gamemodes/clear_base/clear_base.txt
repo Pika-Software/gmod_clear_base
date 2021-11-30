@@ -1,0 +1,6 @@
+"clear_base"
+{
+	"title"		"The Clear Base"
+	"category"	"other"
+	"base"		"base"
+}
