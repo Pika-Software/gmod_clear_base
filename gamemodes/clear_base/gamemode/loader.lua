@@ -1,5 +1,5 @@
 local debug_getregistry = debug.getregistry
-local string_EndsWith = string_EndsWith
+local string_EndsWith = string.EndsWith
 local AddCSLuaFile = AddCSLuaFile
 local file_Find = file.Find
 local isstring = isstring
@@ -66,7 +66,7 @@ if SERVER then
         end
     end
 
-    LoadServer(GM.FolderName.."/server")
+    LoadServer(GM.FolderName .. "/gamemode/server")
 end
 
 local function LoadClient(dir)
@@ -92,7 +92,7 @@ local function LoadClient(dir)
     end
 end
 
-LoadServer(GM.FolderName.."/client")
+LoadClient(GM.FolderName .. "/gamemode/client")
 
 local function LoadShared(dir)
     dir = dir .. "/"
@@ -112,8 +112,8 @@ local function LoadShared(dir)
     end
 
     for _, fol in ipairs(folders) do
-        LoadServer(dir .. fol, tag)
+        LoadShared(dir .. fol, tag)
     end
 end
 
-LoadServer(GM.FolderName.."/shared")
+LoadShared(GM.FolderName .. "/gamemode/shared")

@@ -1,4 +1,5 @@
 include("shared.lua")
+include("loader.lua")
 
 -- Gamemode
 function GM:Initialize()

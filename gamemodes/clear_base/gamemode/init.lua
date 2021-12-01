@@ -1,6 +1,9 @@
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
+AddCSLuaFile("loader.lua")
+include("loader.lua")
+
 -- Server
 function GM:Initialize()
 end
