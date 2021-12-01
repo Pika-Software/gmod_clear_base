@@ -15,15 +15,23 @@ end
 function GM:PostDrawHUD()
 end
 
-function GM:HUDShouldDraw(name)
-	-- local ply = LocalPlayer()
-	-- if IsValid(ply) then
-	-- 	local wep = ply:GetActiveWeapon()
+-- // PlayerInit
+local localPlayer = nil
+hook.Add("RenderScene", "FirstFrames", function()
+	hook.Remove("RenderScene", "FirstFrames")
+	localPlayer = LocalPlayer()
+	hook.Run("PlayerInitialized", localPlayer)
+end)
+-- //
 
-	-- 	if IsValid(wep) and (wep["HUDShouldDraw"] != nil) then
-	-- 		return wep.HUDShouldDraw(wep, name)
-	-- 	end
-	-- end
+function GM:HUDShouldDraw(name)
+	if (localPlayer == nil) then return true end
+
+	local wep = localPlayer:GetActiveWeapon()
+	if IsValid(wep) then
+		if (wep["HUDShouldDraw"] == nil) then return true end
+		return wep:HUDShouldDraw(name)
+	end
 
 	return true
 end
