@@ -42,9 +42,6 @@ function GM:CalcVehicleView(veh, ply, view)
 end
 
 function GM:CalcView(ply, origin, angles, fov, znear, zfar)
-	local veh	= ply:GetVehicle()
-	local wep	= ply:GetActiveWeapon()
-
 	local view = {
 		["origin"] = origin,
 		["angles"] = angles,
@@ -54,6 +51,7 @@ function GM:CalcView(ply, origin, angles, fov, znear, zfar)
 		["drawviewer"] = false,
 	}
 
+	local veh = ply:GetVehicle()
 	if IsValid(veh) then
 		return hook.Run("CalcVehicleView", veh, ply, view)
 	end
@@ -64,11 +62,12 @@ function GM:CalcView(ply, origin, angles, fov, znear, zfar)
 
 	player_manager.RunClass(ply, "CalcView", view)
 
+	local wep = ply:GetActiveWeapon()
 	if IsValid(wep) then
-		if (wep["CalcView"] != nil) then
-			local origin, angles, fov = wep:CalcView(ply, Vector(view["origin"]), Angle(view["angles"]), view["fov"])
-			view["origin"], view["angles"], view["fov"] = origin or view["origin"], angles or view["angles"], fov or view["fov"]
-		end
+		if (wep["CalcView"] == nil) then return view end
+
+		local origin, angles, fov = wep:CalcView(ply, Vector(view["origin"]), Angle(view["angles"]), view["fov"])
+		view["origin"], view["angles"], view["fov"] = origin or view["origin"], angles or view["angles"], fov or view["fov"]
 	end
 
 	return view

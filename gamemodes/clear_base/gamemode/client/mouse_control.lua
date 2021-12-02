@@ -8,10 +8,13 @@ end
 
 function GM:AdjustMouseSensitivity(fDefault)
 	local ply = LocalPlayer()
-	if (!IsValid(ply)) then return -1 end
+	if not IsValid(ply) then
+		return -1
+	end
 
 	local wep = ply:GetActiveWeapon()
-	if (wep and wep.AdjustMouseSensitivity) then
+	if IsValid(wep) then
+		if (wep["AdjustMouseSensitivity"] == nil) then return -1 end
 		return wep:AdjustMouseSensitivity()
 	end
 
