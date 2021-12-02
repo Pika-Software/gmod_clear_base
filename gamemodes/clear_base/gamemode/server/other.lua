@@ -83,3 +83,10 @@ timer.Remove("HostnameThink")
 -- Team stuff (need to check probably not working)
 function GM:ShowTeam(ply)
 end
+
+-- admin_functions.lua
+concommand.Remove("banid2")
+concommand.Remove("kickid2")
+
+-- modules/properties.lua
+net.ReceiveRemove("properties")

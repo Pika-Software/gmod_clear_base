@@ -6,7 +6,7 @@ local blockedHullEnts = {
 }
 
 function GM:CalcVehicleView(veh, ply, view)
-	if (veh["GetThirdPersonMode"] == nil or ply:GetViewEntity() != ply) then
+	if (veh["GetThirdPersonMode"] == nil) or (ply:GetViewEntity() != ply) then
 		return
 	end
 
