@@ -14,6 +14,10 @@ end
 
 -- Sandbox trash
 hook.Remove("PostReloadToolsMenu", "BuildCleanupUI")
+hook.Remove("PopulateMenuBar", "DisplayOptions_MenuBar")
+hook.Remove("PopulateMenuBar", "NPCOptions_MenuBar")
+hook.Add("PopulateToolMenu", "PopulateUtilityMenus")
+hook.Add("AddToolMenuCategories", "CreateUtilitiesCategories")
 
 -- Widgets Remove
 hook.Remove("PostDrawEffects", "RenderWidgets")
@@ -43,6 +47,7 @@ concommand.Remove("gm_demo")
 hook.Remove("SpawniconGenerated", "SpawniconGenerated")
 
 -- modules/properties.lua
+properties["List"] = {}
 hook.Remove("PreDrawHalos", "PropertiesHover")
 hook.Remove("GUIMousePressed", "PropertiesClick")
 hook.Remove("PreventScreenClicks", "PropertiesPreventClicks")
