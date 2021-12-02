@@ -3,20 +3,8 @@ GM.Author 	= "Pika Software"
 GM.Email 	= "prikolmen@pika-soft.ru"
 GM.Website 	= "https://pika-soft.ru"
 
-function net.ReceiveRemove(name)
-	net.Receivers[name:lower()] = nil
-end
-
-function list.Remove(name, key)
-	local tbl = list.GetForEdit(name)
-	if (key == nil) then
-		for k, _ in ipairs(tbl) do
-			tbl[k] = nil
-		end
-	else
-		tbl[key] = nil
-	end
-end
+-- One little thing
+GM.Clear_Base = true
 
 --	//		Includes	//
 include("shared/entity.lua")

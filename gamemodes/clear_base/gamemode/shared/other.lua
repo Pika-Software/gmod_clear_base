@@ -14,3 +14,14 @@ end
 function GM:GravGunPickupAllowed(ply, ent)
 	return true
 end
+
+if SERVER then
+	concommand.Remove("lua_find")
+	concommand.Remove("lua_findhooks")
+else
+	concommand.Remove("lua_find_cl")
+	concommand.Remove("lua_findhooks_cl")
+end
+
+-- Edit Variable
+net.ReceiveRemove("editvariable")
