@@ -47,12 +47,9 @@ if SERVER then
     end
 
     function PLAYER:SetModel()
-        local cl_playermodel = self["Player"]:GetInfo("cl_playermodel")
-        local modelname = player_manager.TranslatePlayerModel(cl_playermodel)
+        local modelname = player_manager.TranslatePlayerModel(self["Player"]:GetInfo("cl_playermodel"))
         util.PrecacheModel(modelname)
         self["Player"]:SetModel(modelname)
-
-        print("modelname", modelname)
     end
 
     function PLAYER:Death(inflictor, attacker)
@@ -92,8 +89,7 @@ end
 
 -- Hands
 function PLAYER:GetHandsModel()
-	local playermodel = player_manager.TranslateToPlayerModelName(self["Player"]:GetModel())
-	return player_manager.TranslatePlayerHands(playermodel)
+	return player_manager.TranslatePlayerHands(player_manager.TranslateToPlayerModelName(self["Player"]:GetModel()))
     -- return { model = "models/weapons/c_arms_cstrike.mdl", skin = 1, body = "0100000" }
 end
 

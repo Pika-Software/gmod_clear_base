@@ -3,7 +3,14 @@ GM.Author 	= "Pika Software"
 GM.Email 	= "prikolmen@pika-soft.ru"
 GM.Website 	= "https://pika-soft.ru"
 
--- Engine
+--	//		Includes	//
+include("shared/entity.lua")
+include("shared/other.lua")
+include("shared/player.lua")
+include("shared/player_class/player_default.lua")
+--	//					//
+
+--	//		Engine		//
 function GM:GetGameDescription()
 	return self["Name"]
 end
@@ -20,7 +27,7 @@ end
 function GM:Tick()
 end
 
--- Gamemode
+--	//		Gamemode		//
 function GM:PreGamemodeLoaded()
 end
 

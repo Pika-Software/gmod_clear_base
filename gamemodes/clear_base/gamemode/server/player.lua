@@ -72,29 +72,21 @@ function GM:PlayerDeath(ply, infl, att)
 	end
 
 	player_manager.RunClass(ply, "Death", infl, att)
-
-	MsgAll(ply:Nick() .. " was killed by " .. att:GetClass() .. "\n")
 end
 
 function GM:PlayerInitialSpawn(ply, transiton)
+	player_manager.SetPlayerClass(ply, "player_default")
 	ply:SetTeam(TEAM_UNASSIGNED)
 end
 
 function GM:PlayerSpawnAsSpectator(ply)
 	ply:StripWeapons()
-
-	if (ply:Team() == TEAM_UNASSIGNED) then
-		ply:Spectate(OBS_MODE_FIXED)
-		return
-	end
-
 	ply:SetTeam(TEAM_SPECTATOR)
 	ply:Spectate(OBS_MODE_ROAMING)
 end
 
 function GM:PlayerSpawn(ply, transiton)
-	local tm = ply:Team()
-	if (tm == TEAM_SPECTATOR) or (tm == TEAM_UNASSIGNED) then
+	if (ply:Team() == TEAM_SPECTATOR) then
 		self:PlayerSpawnAsSpectator(ply)
 		return
 	end
@@ -136,7 +128,9 @@ end
 function GM:IsSpawnpointSuitable(ply, ent, killPlayers)
 	local pos = ent:GetPos()
 
-	if (ply:Team() == TEAM_SPECTATOR) then return true end
+	if (ply:Team() == TEAM_SPECTATOR) then
+		return true
+	end
 
 	local blockers = 0
 	for _, pl in ipairs(ents.FindInBox(pos + Vector(-16, -16, 0), pos + Vector(16, 16, 64))) do
@@ -193,8 +187,8 @@ function GM:PlayerSelectSpawn(ply, transiton)
 	for i = 1, count do
 		ChosenSpawnPoint = table.Random(self["SpawnPoints"])
 
-		if (IsValid(ChosenSpawnPoint) and ChosenSpawnPoint:IsInWorld()) then
-			if ((ChosenSpawnPoint == ply:GetVar("LastSpawnpoint") or ChosenSpawnPoint == self["LastSpawnPoint"]) and count > 1) then continue end
+		if IsValid(ChosenSpawnPoint) and ChosenSpawnPoint:IsInWorld() then
+			if (ChosenSpawnPoint == ply:GetVar("LastSpawnpoint")) or (ChosenSpawnPoint == self["LastSpawnPoint"]) and (count > 1) then continue end
 
 			if (hook.Call("IsSpawnpointSuitable", GAMEMODE, ply, ChosenSpawnPoint, i == count)) then
 				self["LastSpawnPoint"] = ChosenSpawnPoint
@@ -296,5 +290,8 @@ end
 function GM:PlayerDroppedWeapon(ply, weapon)
 end
 
-function GM:PlayerButtonDown(ply, btn) end
-function GM:PlayerButtonUp(ply, btn) end
+function GM:PlayerButtonDown(ply, btn)
+end
+
+function GM:PlayerButtonUp(ply, btn)
+end
