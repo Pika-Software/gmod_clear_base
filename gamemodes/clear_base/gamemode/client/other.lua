@@ -16,8 +16,9 @@ end
 hook.Remove("PostReloadToolsMenu", "BuildCleanupUI")
 hook.Remove("PopulateMenuBar", "DisplayOptions_MenuBar")
 hook.Remove("PopulateMenuBar", "NPCOptions_MenuBar")
-hook.Add("PopulateToolMenu", "PopulateUtilityMenus")
-hook.Add("AddToolMenuCategories", "CreateUtilitiesCategories")
+hook.Remove("PopulateToolMenu", "PopulateUtilityMenus")
+hook.Remove("AddToolMenuCategories", "CreateUtilitiesCategories")
+hook.Remove("OnGamemodeLoaded", "CreateMenuBar")
 
 -- Widgets Remove
 hook.Remove("PostDrawEffects", "RenderWidgets")

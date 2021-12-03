@@ -92,7 +92,6 @@ function GM:PlayerSpawn(ply, transiton)
 	end
 
 	ply:UnSpectate()
-	ply:SetupHands()
 
 	player_manager.OnPlayerSpawn(ply, transiton)
 	player_manager.RunClass(ply, "Spawn")
@@ -105,7 +104,11 @@ function GM:PlayerSpawn(ply, transiton)
 end
 
 function GM:PlayerSetModel(ply)
+	-- Model
 	player_manager.RunClass(ply, "SetModel")
+
+	-- Hands
+	ply:SetupHands()
 end
 
 function GM:PlayerSetHandsModel(ply, ent)

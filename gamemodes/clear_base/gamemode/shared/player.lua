@@ -69,10 +69,6 @@ function GM:PlayerDriveAnimate(ply)
 end
 
 function GM:OnViewModelChanged(vm, old, new)
-	local ply = vm:GetOwner()
-	if IsValid(ply) then
-		player_manager.RunClass(ply, "ViewModelChanged", vm, old, new)
-	end
 end
 
 function GM:CanProperty(pl, property, ent)
@@ -230,4 +226,47 @@ function PLAYER:GetEyeTraceNoCursor()
 	self.PlayerAimTrace = tr
 
 	return tr
+end
+
+if CLIENT then
+	if (PLAYER["OriginalConCommand"] == nil) then
+		PLAYER["OriginalConCommand"] = PLAYER["ConCommand"]
+	end
+
+	local CommandList = nil
+	local ply = nil
+
+	function PLAYER:ConCommand(command, skip)
+		if not IsValid(ply) then
+			ply = self
+		end
+
+		if (skip == true) or IsConCommandBlocked(command) then
+			self:OriginalConCommand(command)
+		else
+			CommandList = CommandList or {}
+			table.insert(CommandList, command)
+		end
+	end
+
+	hook.Add("Tick", "SendQueuedConsoleCommands", function()
+		if (CommandList == nil) or (ply == nil) then return end
+
+		local BytesSent = 0
+
+		for num, cmd in ipairs(CommandList) do
+			ply:OriginalConCommand(cmd)
+			table.remove(CommandList, num)
+
+			-- Only send x bytes per tick
+			BytesSent = BytesSent + cmd:len()
+			if (BytesSent > 128) then
+				break
+			end
+		end
+
+		if table.IsEmpty(CommandList) then
+			CommandList = nil
+		end
+	end)
 end

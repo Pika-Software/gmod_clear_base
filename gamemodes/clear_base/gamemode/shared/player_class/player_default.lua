@@ -78,9 +78,6 @@ function PLAYER:FinishMove(mv)
 end
 
 -- Viewmodel
-function PLAYER:ViewModelChanged(vm, old, new)
-end
-
 function PLAYER:PreDrawViewModel(vm, weapon)
 end
 
