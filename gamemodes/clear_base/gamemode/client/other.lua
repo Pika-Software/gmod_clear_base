@@ -1,12 +1,3 @@
--- Screen Procent (Like ScreenScale but much better)
-local screenProcent = (ScrW() < ScrH() and ScrW() or ScrH()) / 100
-hook.Add("OnScreenSizeChanged", "Clear_Base:ScreenProcent", function()
-	screenProcent = (ScrW() < ScrH() and ScrW() or ScrH()) / 100
-end)
-
-function ScreenProcent() return screenProcent end
-function GetDesiredScreenSize(proc) return screenProcent * proc end
-
 -- PhysGun
 function GM:DrawPhysgunBeam(ply, wep, bOn, target, boneid, pos)
 	return true
