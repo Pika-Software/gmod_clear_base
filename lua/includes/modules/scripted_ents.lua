@@ -79,6 +79,7 @@ function Register(tbl, class)
 	}
 
 	entity["tbl"]["ClassName"] = class
+	entity["t"] = entity["tbl"]
 
 	if not isstring(base) or (base == "") then
 		Log("WARNING: Scripted entity " .. class .. " has an invalid base entity!\n")
