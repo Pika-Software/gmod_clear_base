@@ -53,9 +53,7 @@ function GM:PostDrawViewModel(vm, ply, wep)
 		end
 	end
 
-	player_manager.RunClass(ply, "PostDrawViewModel", vm, wep)
-
-	if (wep.PostDrawViewModel == nil) then
+	if (wep["PostDrawViewModel"] == nil) then
 		return false
 	end
 

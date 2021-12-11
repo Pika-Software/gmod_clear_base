@@ -6,8 +6,6 @@
 gamemodes\clear_base\gamemode\cl_init.lua
 gamemodes\clear_base\gamemode\shared.lua
 
-gamemodes\clear_base\gamemode\player_class\player_default.lua
-
 gamemodes\clear_base\entities\weapons\weapon_base\cl_init.lua
 gamemodes\clear_base\entities\weapons\weapon_base\shared.lua
 gamemodes\clear_base\entities\weapons\weapon_base\ai_translations.lua
@@ -47,4 +45,3 @@ gamemodes\clear_base\entities\effects\phys_unfreeze.lua
 gamemodes\clear_base\entities\effects\propspawn.lua
 gamemodes\clear_base\entities\effects\selection_indicator.lua
 gamemodes\clear_base\entities\effects\selection_ring.lua
-gamemodes\clear_base\entities\effects\wheel_indicator.lua
