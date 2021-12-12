@@ -1,3 +1,20 @@
+local player_manager_TranslateToPlayerModelName = player_manager.TranslateToPlayerModelName
+local player_manager_TranslatePlayerHands = player_manager.TranslatePlayerHands
+local player_manager_SetPlayerClass = player_manager.SetPlayerClass
+local player_manager_OnPlayerSpawn = player_manager.OnPlayerSpawn
+local player_manager_RunClass = player_manager.RunClass
+local IsTableOfEntitiesValid = IsTableOfEntitiesValid
+local ents_FindByClass = ents.FindByClass
+local ents_FindInBox = ents.FindInBox
+local table_Random = table.Random
+local table_Count = table.Count
+local table_Add = table.Add
+local hook_Call = hook.Call
+local IsValid = IsValid
+local ipairs = ipairs
+local Vector = Vector
+local Msg = Msg
+
 function GM:DoPlayerDeath(ply, attacker, dmginfo)
 	ply:CreateRagdoll()
 	ply:AddDeaths(1)
@@ -71,11 +88,11 @@ function GM:PlayerDeath(ply, infl, att)
 		end
 	end
 
-	player_manager.RunClass(ply, "Death", infl, att)
+	player_manager_RunClass(ply, "Death", infl, att)
 end
 
 function GM:PlayerInitialSpawn(ply, transiton)
-	player_manager.SetPlayerClass(ply, "player_default")
+	player_manager_SetPlayerClass(ply, "player_default")
 	ply:SetTeam(TEAM_UNASSIGNED)
 end
 
@@ -93,28 +110,28 @@ function GM:PlayerSpawn(ply, transiton)
 
 	ply:UnSpectate()
 
-	player_manager.OnPlayerSpawn(ply, transiton)
-	player_manager.RunClass(ply, "Spawn")
+	player_manager_OnPlayerSpawn(ply, transiton)
+	player_manager_RunClass(ply, "Spawn")
 
 	if not transiton then
-		hook.Call("PlayerLoadout", GAMEMODE, ply)
+		hook_Call("PlayerLoadout", GAMEMODE, ply)
 	end
 
-	hook.Call("PlayerSetModel", GAMEMODE, ply)
+	hook_Call("PlayerSetModel", GAMEMODE, ply)
 end
 
 function GM:PlayerSetModel(ply)
 	-- Model
-	player_manager.RunClass(ply, "SetModel")
+	player_manager_RunClass(ply, "SetModel")
 
 	-- Hands
 	ply:SetupHands()
 end
 
 function GM:PlayerSetHandsModel(ply, ent)
-	local info = player_manager.RunClass(ply, "GetHandsModel")
+	local info = player_manager_RunClass(ply, "GetHandsModel")
 	if not info then
-		info = player_manager.TranslatePlayerHands(player_manager.TranslateToPlayerModelName(ply:GetModel()))
+		info = player_manager_TranslatePlayerHands(player_manager_TranslateToPlayerModelName(ply:GetModel()))
 	end
 
 	if info then
@@ -125,7 +142,7 @@ function GM:PlayerSetHandsModel(ply, ent)
 end
 
 function GM:PlayerLoadout(ply)
-	player_manager.RunClass(ply, "Loadout")
+	player_manager_RunClass(ply, "Loadout")
 end
 
 function GM:IsSpawnpointSuitable(ply, ent, killPlayers)
@@ -136,7 +153,7 @@ function GM:IsSpawnpointSuitable(ply, ent, killPlayers)
 	end
 
 	local blockers = 0
-	for _, pl in ipairs(ents.FindInBox(pos + Vector(-16, -16, 0), pos + Vector(16, 16, 64))) do
+	for _, pl in ipairs(ents_FindInBox(pos + Vector(-16, -16, 0), pos + Vector(16, 16, 64))) do
 		if IsValid(pl) and (pl != ply) and pl:IsPlayer() and pl:Alive() then
 			blockers = blockers + 1
 
@@ -159,27 +176,27 @@ function GM:PlayerSelectSpawn(ply, transiton)
 	if not IsTableOfEntitiesValid(self["SpawnPoints"]) then
 
 		self["LastSpawnPoint"] = 0
-		self["SpawnPoints"] = ents.FindByClass("info_player_start")
-		self["SpawnPoints"] = table.Add(self["SpawnPoints"], ents.FindByClass("info_player_deathmatch"))
-		self["SpawnPoints"] = table.Add(self["SpawnPoints"], ents.FindByClass("info_player_combine"))
-		self["SpawnPoints"] = table.Add(self["SpawnPoints"], ents.FindByClass("info_player_rebel"))
+		self["SpawnPoints"] = ents_FindByClass("info_player_start")
+		self["SpawnPoints"] = table_Add(self["SpawnPoints"], ents_FindByClass("info_player_deathmatch"))
+		self["SpawnPoints"] = table_Add(self["SpawnPoints"], ents_FindByClass("info_player_combine"))
+		self["SpawnPoints"] = table_Add(self["SpawnPoints"], ents_FindByClass("info_player_rebel"))
 
 		-- CS Maps
-		self["SpawnPoints"] = table.Add(self["SpawnPoints"], ents.FindByClass("info_player_counterterrorist"))
-		self["SpawnPoints"] = table.Add(self["SpawnPoints"], ents.FindByClass("info_player_terrorist"))
+		self["SpawnPoints"] = table_Add(self["SpawnPoints"], ents_FindByClass("info_player_counterterrorist"))
+		self["SpawnPoints"] = table_Add(self["SpawnPoints"], ents_FindByClass("info_player_terrorist"))
 
 		-- (Old) GMod Maps
-		self["SpawnPoints"] = table.Add(self["SpawnPoints"], ents.FindByClass("gmod_player_start"))
+		self["SpawnPoints"] = table_Add(self["SpawnPoints"], ents_FindByClass("gmod_player_start"))
 	end
 
-	local count = table.Count(self["SpawnPoints"])
+	local count = table_Count(self["SpawnPoints"])
 	if (count == 0) then
 		Msg("[PlayerSelectSpawn] Error! No spawn points!\n")
 		return nil
 	end
 
 	for _, ent in ipairs(self["SpawnPoints"]) do
-		if ent:HasSpawnFlags(1) and hook.Call("IsSpawnpointSuitable", GAMEMODE, ply, ent, true) then
+		if ent:HasSpawnFlags(1) and hook_Call("IsSpawnpointSuitable", GAMEMODE, ply, ent, true) then
 			return ent
 		end
 	end
@@ -188,12 +205,12 @@ function GM:PlayerSelectSpawn(ply, transiton)
 
 	-- Try to work out the best, random spawnpoint
 	for i = 1, count do
-		ChosenSpawnPoint = table.Random(self["SpawnPoints"])
+		ChosenSpawnPoint = table_Random(self["SpawnPoints"])
 
 		if IsValid(ChosenSpawnPoint) and ChosenSpawnPoint:IsInWorld() then
 			if (ChosenSpawnPoint == ply:GetVar("LastSpawnpoint")) or (ChosenSpawnPoint == self["LastSpawnPoint"]) and (count > 1) then continue end
 
-			if (hook.Call("IsSpawnpointSuitable", GAMEMODE, ply, ChosenSpawnPoint, i == count)) then
+			if (hook_Call("IsSpawnpointSuitable", GAMEMODE, ply, ChosenSpawnPoint, i == count)) then
 				self["LastSpawnPoint"] = ChosenSpawnPoint
 				ply:SetVar("LastSpawnpoint", ChosenSpawnPoint)
 

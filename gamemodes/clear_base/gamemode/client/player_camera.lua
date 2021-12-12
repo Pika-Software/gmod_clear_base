@@ -1,3 +1,11 @@
+local player_manager_RunClass = player_manager.RunClass
+local drive_CalcView = drive.CalcView
+local util_TraceHull = util.TraceHull
+local hook_Run = hook.Run
+local IsValid = IsValid
+local Vector = Vector
+local Angle = Angle
+
 local blockedHullEnts = {
 	["prop_physics"] = true,
 	["prop_dynamic"] = true,
@@ -21,7 +29,7 @@ function GM:CalcVehicleView(veh, ply, view)
 	local TargetOrigin = view["origin"] + (view["angles"]:Forward() * -radius)
 	local WallOffset = 4
 
-	local tr = util.TraceHull({
+	local tr = util_TraceHull({
 		start = view["origin"],
 		endpos = TargetOrigin,
 		filter = function(ent)
@@ -53,14 +61,14 @@ function GM:CalcView(ply, origin, angles, fov, znear, zfar)
 
 	local veh = ply:GetVehicle()
 	if IsValid(veh) then
-		return hook.Run("CalcVehicleView", veh, ply, view)
+		return hook_Run("CalcVehicleView", veh, ply, view)
 	end
 
-	if drive.CalcView(ply, view) then
+	if drive_CalcView(ply, view) then
 		return view
 	end
 
-	player_manager.RunClass(ply, "CalcView", view)
+	player_manager_RunClass(ply, "CalcView", view)
 
 	local wep = ply:GetActiveWeapon()
 	if IsValid(wep) then

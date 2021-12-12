@@ -1,3 +1,5 @@
+local include = include
+
 GM.Name 	= "Clear Base"
 GM.Author 	= "Pika Software"
 GM.Email 	= "prikolmen@pika-soft.ru"

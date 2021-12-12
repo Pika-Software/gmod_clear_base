@@ -1,3 +1,6 @@
+local LocalPlayer = LocalPlayer
+local IsValid = IsValid
+
 -- Mouse
 function GM:InputMouseApply(cmd, x, y, angle)
 end

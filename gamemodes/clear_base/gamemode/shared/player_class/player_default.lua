@@ -1,3 +1,9 @@
+local player_manager_TranslateToPlayerModelName = player_manager.TranslateToPlayerModelName
+local player_manager_TranslatePlayerModel = player_manager.TranslatePlayerModel
+local player_manager_TranslatePlayerHands = player_manager.TranslatePlayerHands
+local player_manager_RegisterClass = player_manager.RegisterClass
+local util_PrecacheModel = util.PrecacheModel
+
 local PLAYER = {
     ["DisplayName"] = "Default Class",
 
@@ -47,8 +53,8 @@ if SERVER then
     end
 
     function PLAYER:SetModel()
-        local modelname = player_manager.TranslatePlayerModel(self["Player"]:GetInfo("cl_playermodel"))
-        util.PrecacheModel(modelname)
+        local modelname = player_manager_TranslatePlayerModel(self["Player"]:GetInfo("cl_playermodel"))
+        util_PrecacheModel(modelname)
         self["Player"]:SetModel(modelname)
     end
 
@@ -86,8 +92,8 @@ end
 
 -- Hands
 function PLAYER:GetHandsModel()
-	return player_manager.TranslatePlayerHands(player_manager.TranslateToPlayerModelName(self["Player"]:GetModel()))
+	return player_manager_TranslatePlayerHands(player_manager_TranslateToPlayerModelName(self["Player"]:GetModel()))
     -- return { model = "models/weapons/c_arms_cstrike.mdl", skin = 1, body = "0100000" }
 end
 
-player_manager.RegisterClass("player_default", PLAYER)
+player_manager_RegisterClass("player_default", PLAYER)

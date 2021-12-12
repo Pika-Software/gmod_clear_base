@@ -1,3 +1,5 @@
+local include = include
+
 include("shared.lua")
 
 --	//		Includes	//
@@ -22,8 +24,4 @@ function GM:Think()
 end
 
 function GM:ShutDown()
-end
-
-function GM:PostProcessPermitted(str)
-	return false
 end

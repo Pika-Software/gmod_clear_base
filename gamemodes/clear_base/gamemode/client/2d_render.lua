@@ -1,3 +1,10 @@
+local timer_Remove = timer.Remove
+local hook_Remove = hook.Remove
+local LocalPlayer = LocalPlayer
+local hook_Add = hook.Add
+local hook_Run = hook.Run
+local IsValid = IsValid
+
 -- Overlay
 function GM:DrawOverlay()
 end
@@ -17,10 +24,10 @@ end
 
 -- // PlayerInit
 local localPlayer = nil
-hook.Add("RenderScene", "FirstFrames", function()
-	hook.Remove("RenderScene", "FirstFrames")
+hook_Add("RenderScene", "FirstFrames", function()
+	hook_Remove("RenderScene", "FirstFrames")
 	localPlayer = LocalPlayer()
-	hook.Run("PlayerInitialized", localPlayer)
+	hook_Run("PlayerInitialized", localPlayer)
 end)
 -- //
 
@@ -53,16 +60,19 @@ end
 function GM:HUDDrawPickupHistory()
 end
 
--- Voice HUD
-function GM:PlayerStartVoice(ply)
-end
+-- Voice HUD ( better not turn it off )
 
-function GM:PlayerEndVoice(ply)
-end
+/*
+	function GM:PlayerStartVoice(ply)
+	end
 
-timer.Remove("VoiceClean")
+	function GM:PlayerEndVoice(ply)
+	end
 
-hook.Remove("InitPostEntity", "CreateVoiceVGUI")
+	timer_Remove("VoiceClean")
+
+	hook_Remove("InitPostEntity", "CreateVoiceVGUI")
+*/
 
 -- Death Notice
 function GM:AddDeathNotice(att, team1, infl, ply, team2)

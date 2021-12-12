@@ -1,3 +1,13 @@
+local cvars_AddChangeCallback = cvars.AddChangeCallback
+local concommand_Remove = concommand.Remove
+local SetGlobalString = SetGlobalString
+local timer_Simple = timer.Simple
+local timer_Remove = timer.Remove
+local GetHostName = GetHostName
+local math_Clamp = math.Clamp
+local hook_Run = hook.Run
+local IsValid = IsValid
+
 -- Entity
 function GM:EntityTakeDamage(ent, info)
 end
@@ -22,7 +32,7 @@ function GM:VehicleMove(ply, vehicle, mv)
 
 	local iWheel = ply:GetCurrentCommand():GetMouseWheel()
 	if (iWheel != 0) and vehicle["SetCameraDistance"] then
-		local newdist = math.Clamp(vehicle:GetCameraDistance() - iWheel * 0.03 * (1.1 + vehicle:GetCameraDistance()), -1, 10)
+		local newdist = math_Clamp(vehicle:GetCameraDistance() - iWheel * 0.03 * (1.1 + vehicle:GetCameraDistance()), -1, 10)
 		vehicle:SetCameraDistance(newdist)
 	end
 end
@@ -38,7 +48,7 @@ end
 -- VariableEdit
 function GM:VariableEdited(ent, ply, key, val, editor)
 	if not IsValid(ent) or not IsValid(ply) then return end
-	if not hook.Run("CanEditVariable", ent, ply, key, val, editor) then return end
+	if not hook_Run("CanEditVariable", ent, ply, key, val, editor) then return end
 
 	ent:EditValue(key, val)
 end
@@ -77,16 +87,28 @@ end
 function GM:GravGunOnDropped(ply, ent)
 end
 
--- Remove stupid stuff
-timer.Remove("HostnameThink")
-
--- Team stuff (need to check probably not working)
-function GM:ShowTeam(ply)
+-- Hostname Update
+function GM:UpdateHostName()
+    SetGlobalString("ServerName", GetHostName())
 end
 
--- admin_functions.lua
-concommand.Remove("banid2")
-concommand.Remove("kickid2")
+timer_Simple(0, function()
+	-- Remove stupid stuff
+	timer_Remove("HostnameThink")
 
--- modules/properties.lua
-net.ReceiveRemove("properties")
+	-- Team stuff (need to check probably not working)
+	function GM:ShowTeam(ply)
+	end
+
+	-- admin_functions.lua
+	concommand_Remove("banid2")
+	concommand_Remove("kickid2")
+
+	-- modules/properties.lua
+	net.ReceiveRemove("properties")
+
+	-- Hostname Update
+	local GM = GAMEMODE or GM
+    GM:UpdateHostName()
+    cvars_AddChangeCallback("hostname", GM["UpdateHostName"], "ServerHostnameUpdate")
+end)

@@ -1,3 +1,9 @@
+local SetGlobalString = SetGlobalString
+local AddCSLuaFile = AddCSLuaFile
+local timer_Simple = timer.Simple
+local GetHostName = GetHostName
+local include = include
+
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
@@ -37,4 +43,3 @@ end
 
 function GM:ShutDown()
 end
-

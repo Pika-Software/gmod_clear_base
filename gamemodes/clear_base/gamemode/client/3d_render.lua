@@ -1,10 +1,12 @@
+local player_manager_RunClass = player_manager.RunClass
+
 -- Scene
 function GM:RenderScene(origin, angle, fov)
 end
 
 -- Player
 function GM:ShouldDrawLocalPlayer(ply)
-	return player_manager.RunClass(ply, "ShouldDrawLocal")
+	return player_manager_RunClass(ply, "ShouldDrawLocal")
 end
 
 function GM:PostPlayerDraw(ply)
