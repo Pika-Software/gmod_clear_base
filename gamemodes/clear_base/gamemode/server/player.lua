@@ -9,7 +9,6 @@ local ents_FindInBox = ents.FindInBox
 local table_Random = table.Random
 local table_Count = table.Count
 local table_Add = table.Add
-local hook_Call = hook.Call
 local IsValid = IsValid
 local ipairs = ipairs
 local Vector = Vector
@@ -114,10 +113,10 @@ function GM:PlayerSpawn(ply, transiton)
 	player_manager_RunClass(ply, "Spawn")
 
 	if not transiton then
-		hook_Call("PlayerLoadout", GAMEMODE, ply)
+		hook.Call("PlayerLoadout", GAMEMODE, ply)
 	end
 
-	hook_Call("PlayerSetModel", GAMEMODE, ply)
+	hook.Call("PlayerSetModel", GAMEMODE, ply)
 end
 
 function GM:PlayerSetModel(ply)
@@ -196,7 +195,7 @@ function GM:PlayerSelectSpawn(ply, transiton)
 	end
 
 	for _, ent in ipairs(self["SpawnPoints"]) do
-		if ent:HasSpawnFlags(1) and hook_Call("IsSpawnpointSuitable", GAMEMODE, ply, ent, true) then
+		if ent:HasSpawnFlags(1) and hook.Call("IsSpawnpointSuitable", GAMEMODE, ply, ent, true) then
 			return ent
 		end
 	end
@@ -210,7 +209,7 @@ function GM:PlayerSelectSpawn(ply, transiton)
 		if IsValid(ChosenSpawnPoint) and ChosenSpawnPoint:IsInWorld() then
 			if (ChosenSpawnPoint == ply:GetVar("LastSpawnpoint")) or (ChosenSpawnPoint == self["LastSpawnPoint"]) and (count > 1) then continue end
 
-			if (hook_Call("IsSpawnpointSuitable", GAMEMODE, ply, ChosenSpawnPoint, i == count)) then
+			if (hook.Call("IsSpawnpointSuitable", GAMEMODE, ply, ChosenSpawnPoint, i == count)) then
 				self["LastSpawnPoint"] = ChosenSpawnPoint
 				ply:SetVar("LastSpawnpoint", ChosenSpawnPoint)
 

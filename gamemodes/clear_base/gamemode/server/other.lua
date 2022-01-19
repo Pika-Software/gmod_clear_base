@@ -1,11 +1,7 @@
 local cvars_AddChangeCallback = cvars.AddChangeCallback
-local concommand_Remove = concommand.Remove
 local SetGlobalString = SetGlobalString
-local timer_Simple = timer.Simple
-local timer_Remove = timer.Remove
 local GetHostName = GetHostName
 local math_Clamp = math.Clamp
-local hook_Run = hook.Run
 local IsValid = IsValid
 
 -- Entity
@@ -48,7 +44,7 @@ end
 -- VariableEdit
 function GM:VariableEdited(ent, ply, key, val, editor)
 	if not IsValid(ent) or not IsValid(ply) then return end
-	if not hook_Run("CanEditVariable", ent, ply, key, val, editor) then return end
+	if not hook.Run("CanEditVariable", ent, ply, key, val, editor) then return end
 
 	ent:EditValue(key, val)
 end
@@ -92,17 +88,17 @@ function GM:UpdateHostName()
     SetGlobalString("ServerName", GetHostName())
 end
 
-timer_Simple(0, function()
+timer.Simple(0, function()
 	-- Remove stupid stuff
-	timer_Remove("HostnameThink")
+	timer.Remove("HostnameThink")
 
 	-- Team stuff (need to check probably not working)
 	function GM:ShowTeam(ply)
 	end
 
 	-- admin_functions.lua
-	concommand_Remove("banid2")
-	concommand_Remove("kickid2")
+	concommand.Remove("banid2")
+	concommand.Remove("kickid2")
 
 	-- modules/properties.lua
 	net.ReceiveRemove("properties")

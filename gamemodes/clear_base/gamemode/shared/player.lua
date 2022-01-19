@@ -13,7 +13,6 @@ local drive_Start = drive.Start
 local FrameNumber = FrameNumber
 local drive_Move = drive.Move
 local drive_End = drive.End
-local hook_Add = hook.Add
 local CurTime = CurTime
 local IsValid = IsValid
 local ipairs = ipairs
@@ -264,7 +263,7 @@ if CLIENT then
 		end
 	end
 
-	hook_Add("Tick", "SendQueuedConsoleCommands", function()
+	hook.Add("Tick", "SendQueuedConsoleCommands", function()
 		if (CommandList == nil) or (ply == nil) then return end
 
 		local BytesSent = 0

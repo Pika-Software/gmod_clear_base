@@ -1,4 +1,3 @@
-
 module("weapons", package.seeall)
 
 Registered = {}

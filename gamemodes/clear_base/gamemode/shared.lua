@@ -6,7 +6,7 @@ GM.Email 	= "prikolmen@pika-soft.ru"
 GM.Website 	= "https://pika-soft.ru"
 
 -- One little thing
-GM.Clear_Base = true
+GM.IsClearBaseDerived = true
 
 --	//		Includes	//
 include("shared/entity.lua")
