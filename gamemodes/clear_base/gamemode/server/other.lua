@@ -88,13 +88,13 @@ function GM:UpdateHostName()
     SetGlobalString("ServerName", GetHostName())
 end
 
+-- Team stuff (need to check probably not working)
+function GM:ShowTeam(ply)
+end
+
 timer.Simple(0, function()
 	-- Remove stupid stuff
 	timer.Remove("HostnameThink")
-
-	-- Team stuff (need to check probably not working)
-	function GM:ShowTeam(ply)
-	end
 
 	-- admin_functions.lua
 	concommand.Remove("banid2")
