@@ -1,10 +1,3 @@
-local timer_Remove = timer.Remove
-local hook_Remove = hook.Remove
-local LocalPlayer = LocalPlayer
-local hook_Add = hook.Add
-local hook_Run = hook.Run
-local IsValid = IsValid
-
 -- Overlay
 function GM:DrawOverlay()
 end
@@ -22,25 +15,27 @@ end
 function GM:PostDrawHUD()
 end
 
--- // PlayerInit
-local localPlayer = nil
-hook_Add("RenderScene", "FirstFrames", function()
-	hook_Remove("RenderScene", "FirstFrames")
-	localPlayer = LocalPlayer()
-	hook_Run("PlayerInitialized", localPlayer)
-end)
--- //
+-- HUDShouldDraw
+do
 
-function GM:HUDShouldDraw(name)
-	if (localPlayer == nil) then return true end
+	local player = nil
+	hook.Add("PlayerInitialized", "HUDShouldDraw", function( ply )
+		player = ply
+	end)
 
-	local wep = localPlayer:GetActiveWeapon()
-	if IsValid(wep) then
-		if (wep["HUDShouldDraw"] == nil) then return true end
-		return wep:HUDShouldDraw(name)
+	local IsValid = IsValid
+	function GM:HUDShouldDraw( name )
+		if (player == nil) then return true end
+
+		local wep = player:GetActiveWeapon()
+		if IsValid( wep ) then
+			if (wep.HUDShouldDraw == nil) then return true end
+			return wep:HUDShouldDraw( name )
+		end
+
+		return true
 	end
 
-	return true
 end
 
 -- TargetID
@@ -48,37 +43,40 @@ function GM:HUDDrawTargetID()
 end
 
 -- Pickup HUD
-function GM:HUDWeaponPickedUp(wep)
+function GM:HUDWeaponPickedUp( wep )
 end
 
-function GM:HUDItemPickedUp(itemname)
+function GM:HUDItemPickedUp( itemname )
 end
 
-function GM:HUDAmmoPickedUp(itemname, amount)
+function GM:HUDAmmoPickedUp( itemname, amount )
 end
 
 function GM:HUDDrawPickupHistory()
 end
 
 -- Voice HUD ( better not turn it off )
-
 /*
+
+timer.Simple(0, function()
 	function GM:PlayerStartVoice(ply)
 	end
 
 	function GM:PlayerEndVoice(ply)
 	end
 
-	timer_Remove("VoiceClean")
+	timer.Remove("VoiceClean")
 
-	hook_Remove("InitPostEntity", "CreateVoiceVGUI")
+	hook.Remove("InitPostEntity", "CreateVoiceVGUI")
+end)
+
 */
 
 -- Death Notice
-function GM:AddDeathNotice(att, team1, infl, ply, team2)
+function GM:AddDeathNotice( att, team1, infl, ply, team2 )
 end
 
-function GM:DrawDeathNotice(x, y)
+function GM:DrawDeathNotice( x, y )
 end
 
 -- Scoreboard
@@ -100,6 +98,6 @@ function GM:PostRenderVGUI()
 end
 
 -- Blur
-function GM:GetMotionBlurValues(x, y, fwd, spin)
+function GM:GetMotionBlurValues( x, y, fwd, spin )
 	return x, y, fwd, spin
 end
