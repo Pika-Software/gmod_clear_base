@@ -1,9 +1,3 @@
-local player_manager_TranslateToPlayerModelName = player_manager.TranslateToPlayerModelName
-local player_manager_TranslatePlayerModel = player_manager.TranslatePlayerModel
-local player_manager_TranslatePlayerHands = player_manager.TranslatePlayerHands
-local player_manager_RegisterClass = player_manager.RegisterClass
-local util_PrecacheModel = util.PrecacheModel
-
 local PLAYER = {
     ["DisplayName"] = "Default Class",
 
@@ -13,6 +7,11 @@ local PLAYER = {
     ["DropWeaponOnDie"] = false,
     ["AvoidPlayers"] = true,
     ["UseVMHands"] = true,
+
+    -- Default Loadout
+    ["DefaultLoadout"] = {
+        {"weapon_pistol", 255, "Pistol"}
+    },
 
     -- Health & Armor
     ["StartHealth"] = 100,
@@ -41,59 +40,84 @@ end
 function PLAYER:Init()
 end
 
-if SERVER then
+if (SERVER) then
 
-    -- Server
     function PLAYER:Spawn()
     end
 
-    function PLAYER:Loadout()
-        self["Player"]:Give("weapon_pistol")
-        self["Player"]:GiveAmmo(255, "Pistol", true)
+    do
+
+        local game_GetAmmoName = game.GetAmmoName
+        local IsValid = IsValid
+        local ipairs = ipairs
+
+        function PLAYER:Loadout()
+            for num, data in ipairs( self.DefaultLoadout ) do
+                local wep = self.Player:Give( data[1] )
+                if IsValid( wep ) then
+                    if (data[2] ~= nil) then
+                        self.Player:GiveAmmo( data[2], game_GetAmmoName( wep:GetPrimaryAmmoType() ), true )
+                    end
+
+                    if (data[3] ~= nil) then
+                        self.Player:GiveAmmo( data[3], game_GetAmmoName( wep:GetSecondaryAmmoType() ), true )
+                    end
+                end
+            end
+        end
+
     end
 
-    function PLAYER:SetModel()
-        local modelname = player_manager_TranslatePlayerModel(self["Player"]:GetInfo("cl_playermodel"))
-        util_PrecacheModel(modelname)
-        self["Player"]:SetModel(modelname)
+    do
+        local player_manager_TranslatePlayerModel = player_manager.TranslatePlayerModel
+        function PLAYER:SetModel()
+            self.Player:SetModel( Model( player_manager_TranslatePlayerModel( self.Player:GetInfo( "cl_playermodel" ) ) ) )
+        end
     end
 
-    function PLAYER:Death(inflictor, attacker)
+    function PLAYER:Death( inflictor, attacker )
     end
+
 else
 
-    -- Client
-    function PLAYER:CalcView(view)
+    function PLAYER:CalcView( view )
     end
 
-    function PLAYER:CreateMove(cmd)
+    function PLAYER:CreateMove( cmd )
     end
 
     function PLAYER:ShouldDrawLocal()
     end
+
 end
 
 -- Movement
-function PLAYER:StartMove(cmd, mv)
+function PLAYER:StartMove( cmd, mv )
 end
 
-function PLAYER:Move(mv)
+function PLAYER:Move( mv )
 end
 
-function PLAYER:FinishMove(mv)
+function PLAYER:FinishMove( mv )
 end
 
 -- Viewmodel
-function PLAYER:PreDrawViewModel(vm, weapon)
+function PLAYER:PreDrawViewModel( vm, wep )
 end
 
-function PLAYER:PostDrawViewModel(vm, weapon)
+function PLAYER:PostDrawViewModel( vm, wep )
 end
 
 -- Hands
-function PLAYER:GetHandsModel()
-	return player_manager_TranslatePlayerHands(player_manager_TranslateToPlayerModelName(self["Player"]:GetModel()))
-    -- return { model = "models/weapons/c_arms_cstrike.mdl", skin = 1, body = "0100000" }
+do
+
+    local player_manager_TranslatePlayerHands = player_manager.TranslatePlayerHands
+    local player_manager_TranslateToPlayerModelName = player_manager.TranslateToPlayerModelName
+
+    function PLAYER:GetHandsModel()
+        return player_manager_TranslatePlayerHands( player_manager_TranslateToPlayerModelName( self.Player:GetModel() ) )
+    end
+
 end
 
-player_manager_RegisterClass("player_default", PLAYER)
+player_manager.RegisterClass( "player_default", PLAYER )
