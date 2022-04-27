@@ -14,7 +14,6 @@ include("client/other.lua")
 include("client/player_camera.lua")
 include("client/teams.lua")
 include("client/viewmodel.lua")
---	//					//
 
 --	//		Gamemode		//
 function GM:Initialize()
