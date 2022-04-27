@@ -5,7 +5,7 @@ GM.Author 	= "Pika Software"
 GM.Email 	= "prikolmen@pika-soft.ru"
 GM.Website 	= "https://pika-soft.ru"
 
--- One little thing
+-- Derived Marker
 GM.IsClearBaseDerived = true
 
 --	//		Includes	//
@@ -13,11 +13,10 @@ include("shared/entity.lua")
 include("shared/other.lua")
 include("shared/player.lua")
 include("shared/player_class/player_default.lua")
---	//					//
 
---	//		Engine		//
+--	//		Source Engine		//
 function GM:GetGameDescription()
-	return self["Name"]
+	return self.Name
 end
 
 function GM:OnReloaded()
