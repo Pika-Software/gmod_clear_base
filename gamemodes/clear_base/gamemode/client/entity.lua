@@ -1,8 +1,9 @@
+-- Entities
 function GM:InitPostEntity()
 end
 
-function GM:NetworkEntityCreated(ent)
+function GM:NetworkEntityCreated( entity )
 end
 
-function GM:CreateClientsideRagdoll(entity, ragdoll)
+function GM:CreateClientsideRagdoll( entity, ragdoll )
 end
