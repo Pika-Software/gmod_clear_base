@@ -1,19 +1,30 @@
-local player_manager_RunClass = player_manager.RunClass
-
 -- Scene
 function GM:RenderScene(origin, angle, fov)
 end
 
 -- Player
-function GM:ShouldDrawLocalPlayer(ply)
-	return player_manager_RunClass(ply, "ShouldDrawLocal")
+function GM:PostPlayerDraw( ply )
 end
 
-function GM:PostPlayerDraw(ply)
+function GM:PrePlayerDraw( ply )
 end
 
-function GM:PrePlayerDraw(ply)
+do
+
+	local player_manager_RunClass = player_manager.RunClass
+	local class_name = "ShouldDrawLocal"
+
+	function GM:ShouldDrawLocalPlayer( ply )
+		return player_manager_RunClass( ply, class_name )
+	end
+
 end
+
+-- PlayerInitialized
+hook.Add("RenderScene", "GM:PlayerInitialized", function()
+	hook.Remove("RenderScene", "GM:PlayerInitialized")
+	hook.Run( "PlayerInitialized", LocalPlayer() )
+end)
 
 -- Render
 function GM:PreRender()
@@ -34,17 +45,17 @@ function GM:PostDraw2DSkyBox()
 end
 
 -- OpaqueRenderables
-function GM:PreDrawOpaqueRenderables(bDrawingDepth, bDrawingSkybox)
+function GM:PreDrawOpaqueRenderables( bDrawingDepth, bDrawingSkybox )
 end
 
-function GM:PostDrawOpaqueRenderables(bDrawingDepth, bDrawingSkybox)
+function GM:PostDrawOpaqueRenderables( bDrawingDepth, bDrawingSkybox )
 end
 
 -- TranslucentRenderables
-function GM:PreDrawTranslucentRenderables(bDrawingDepth, bDrawingSkybox)
+function GM:PreDrawTranslucentRenderables( bDrawingDepth, bDrawingSkybox )
 end
 
-function GM:PostDrawTranslucentRenderables(bDrawingDepth, bDrawingSkybox)
+function GM:PostDrawTranslucentRenderables( bDrawingDepth, bDrawingSkybox )
 end
 
 -- Monitors

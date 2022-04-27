@@ -1,19 +1,13 @@
-local cvars_AddChangeCallback = cvars.AddChangeCallback
-local SetGlobalString = SetGlobalString
-local GetHostName = GetHostName
-local math_Clamp = math.Clamp
-local IsValid = IsValid
-
 -- Entity
-function GM:EntityTakeDamage(ent, info)
+function GM:EntityTakeDamage( entity, info )
 end
 
-function GM:CreateEntityRagdoll(entity, ragdoll)
+function GM:CreateEntityRagdoll( entity, ragdoll )
 end
 
 -- Password
-function GM:CheckPassword(steamid64, ip, server_pass, pass, nick)
-	if (server_pass != "") and (server_pass != pass) then
+function GM:CheckPassword( steamid64, ip, server_pass, pass, nick )
+	if (server_pass ~= "") and (server_pass ~= pass) then
 		return false
 	end
 
@@ -21,75 +15,97 @@ function GM:CheckPassword(steamid64, ip, server_pass, pass, nick)
 end
 
 -- Vehicle
-function GM:VehicleMove(ply, vehicle, mv)
-	if mv:KeyPressed(IN_DUCK) and vehicle["SetThirdPersonMode"] then
-		vehicle:SetThirdPersonMode(!vehicle:GetThirdPersonMode())
-	end
+do
+	local math_Clamp = math.Clamp
+	function GM:VehicleMove( ply, vehicle, mv )
+		if mv:KeyPressed(IN_DUCK) and (vehicle.SetThirdPersonMode ~= nil) then
+			vehicle:SetThirdPersonMode( not vehicle:GetThirdPersonMode() )
+		end
 
-	local iWheel = ply:GetCurrentCommand():GetMouseWheel()
-	if (iWheel != 0) and vehicle["SetCameraDistance"] then
-		local newdist = math_Clamp(vehicle:GetCameraDistance() - iWheel * 0.03 * (1.1 + vehicle:GetCameraDistance()), -1, 10)
-		vehicle:SetCameraDistance(newdist)
+		local iWheel = ply:GetCurrentCommand():GetMouseWheel()
+		if (iWheel ~= 0) and (vehicle.SetCameraDistance ~= nil) then
+			vehicle:SetCameraDistance( math_Clamp(vehicle:GetCameraDistance() - iWheel * 0.03 * (1.1 + vehicle:GetCameraDistance()), -1, 10) )
+		end
 	end
 end
 
 -- Undo
-function GM:PreUndo(undo)
+function GM:PreUndo( undo )
 	return false
 end
 
-function GM:PostUndo(undo, count)
+function GM:PostUndo( undo, count )
 end
 
 -- VariableEdit
-function GM:VariableEdited(ent, ply, key, val, editor)
-	if not IsValid(ent) or not IsValid(ply) then return end
-	if not hook.Run("CanEditVariable", ent, ply, key, val, editor) then return end
+do
 
-	ent:EditValue(key, val)
+	local IsValid = IsValid
+	local hook_Run = hook.Run
+	local hook_name = "CanEditVariable"
+
+	function GM:VariableEdited( ent, ply, key, val, editor )
+		if IsValid( ent ) and IsValid( ply ) then
+			if not hook_Run( hook_name, ent, ply, key, val, editor ) then
+				return
+			end
+
+			ent:EditValue( key, val )
+		end
+	end
+
 end
 
-function GM:CanEditVariable(ent, ply, key, val, editor)
+function GM:CanEditVariable( ent, ply, key, val, editor )
 	return false
 end
 
 -- NPC
-function GM:OnNPCKilled(ent, att, infl)
+function GM:OnNPCKilled( ent, att, infl )
 end
 
-function GM:ScaleNPCDamage(npc, hitgroup, dmg)
+function GM:ScaleNPCDamage( npc, hitgroup, dmg )
 end
 
 -- PhysGun
-function GM:OnPhysgunFreeze(weapon, phys, ent, ply)
-	if not phys:IsMoveable() or ent:GetUnFreezable() then
-		return false
+function GM:OnPhysgunFreeze( wep, phys, ent, ply )
+	if ent:GetUnFreezable() then return false end
+
+	if phys:IsMoveable() then
+		phys:EnableMotion( false )
+		ply:AddFrozenPhysicsObject( ent, phys )
+
+		return true
 	end
 
-	phys:EnableMotion(false)
-	ply:AddFrozenPhysicsObject(ent, phys)
-
-	return true
+	return false
 end
 
-function GM:OnPhysgunReload(weapon, ply)
+function GM:OnPhysgunReload( wep, ply )
 	ply:PhysgunUnfreeze()
 end
 
 -- GravityGun
-function GM:GravGunOnPickedUp(ply, ent)
+function GM:GravGunOnPickedUp( ply, ent )
 end
 
-function GM:GravGunOnDropped(ply, ent)
+function GM:GravGunOnDropped( ply, ent )
 end
 
 -- Hostname Update
-function GM:UpdateHostName()
-    SetGlobalString("ServerName", GetHostName())
+do
+
+	local GetHostName = GetHostName
+	local SetGlobalString = SetGlobalString
+
+	function GM:UpdateHostName()
+		SetGlobalString( "ServerName", GetHostName() )
+	end
+
 end
 
--- Team stuff (need to check probably not working)
-function GM:ShowTeam(ply)
+-- Team System
+function GM:ShowTeam( ply )
 end
 
 timer.Simple(0, function()
@@ -102,9 +118,15 @@ timer.Simple(0, function()
 
 	-- modules/properties.lua
 	net.ReceiveRemove("properties")
-
-	-- Hostname Update
-	local GM = GAMEMODE or GM
-    GM:UpdateHostName()
-    cvars_AddChangeCallback("hostname", GM["UpdateHostName"], "ServerHostnameUpdate")
 end)
+
+-- Hostname Update
+do
+
+	local cvars_AddChangeCallback = cvars.AddChangeCallback
+	hook.Add("PostGamemodeLoaded", "Clear Base", function()
+		GAMEMODE:UpdateHostName()
+		cvars_AddChangeCallback("hostname", GAMEMODE.UpdateHostName, "ServerHostnameUpdate")
+	end)
+
+end
