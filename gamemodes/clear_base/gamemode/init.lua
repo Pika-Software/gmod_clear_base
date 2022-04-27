@@ -1,7 +1,4 @@
-local SetGlobalString = SetGlobalString
 local AddCSLuaFile = AddCSLuaFile
-local timer_Simple = timer.Simple
-local GetHostName = GetHostName
 local include = include
 
 AddCSLuaFile("shared.lua")
@@ -24,12 +21,10 @@ AddCSLuaFile("shared/entity.lua")
 AddCSLuaFile("shared/other.lua")
 AddCSLuaFile("shared/player.lua")
 AddCSLuaFile("shared/player_class/player_default.lua")
---  //                  //
 
 --	//	    Includes	//
 include("server/other.lua")
 include("server/player.lua")
---	//		    		//
 
 --  //      Server      //
 function GM:Initialize()
