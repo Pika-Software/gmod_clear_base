@@ -6,11 +6,11 @@ Registered = {}
 	Name: TableInherit(t, base)
 	Desc: Copies any missing data from base to t
 -----------------------------------------------------------]]
-local function TableInherit(t, base)
+local function TableInherit( t, base )
 	for k, v in pairs(base) do
 		if (t[k] == nil) then
 			t[k] = v
-		elseif (k != "BaseClass" && istable(t[k]) && istable(v)) then
+		elseif (k != "BaseClass" and istable(t[k]) and istable(v)) then
 			TableInherit(t[k], v)
 		end
 	end
